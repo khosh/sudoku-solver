@@ -10,13 +10,14 @@
 int grid[kRows][kCols];
 
 int loadPuzzle (const char *path) {
+	int row, col;
 	FILE *file = fopen(path, "r");
 	
 	if (!file)
 		return 0;
 	
-	for (int row = 0; row < kRows; row++) {
-		for (int col = 0; col < kCols; col++) {
+	for (row = 0; row < kRows; row++) {
+		for (col = 0; col < kCols; col++) {
 			fscanf(file, "%d", &grid[row][col]);
 		}
 	}
@@ -27,7 +28,8 @@ int loadPuzzle (const char *path) {
 }
 
 int valid (int row, int col, int val) {
-	for (int n = 0; n < kRows; n++) {
+	int n,r,c;
+	for (n = 0; n < kRows; n++) {
 		if (grid[n][col] == val || grid[row][n] == val)
 			return 0;
 	}
@@ -35,8 +37,8 @@ int valid (int row, int col, int val) {
 	int sRow = (row / kBoxWidth) * kBoxWidth;
 	int sCol = (col / kBoxWidth) * kBoxWidth;
 	
-	for (int r = sRow; r < sRow + kBoxWidth; r++) {
-		for (int c = sCol; c < sCol + kBoxWidth; c++) {
+	for (r = sRow; r < sRow + kBoxWidth; r++) {
+		for (c = sCol; c < sCol + kBoxWidth; c++) {
 			if (grid[r][c] == val)
 				return 0;
 		}
@@ -46,6 +48,7 @@ int valid (int row, int col, int val) {
 }
 
 int solve (int row, int col) {
+	int val;
 	if (row == kRows)
 		return 1;
 	
@@ -56,7 +59,7 @@ int solve (int row, int col) {
 		return solve(row, col + 1);
 	}
 	
-	for (int val = 1; val <= kValues; val++) {
+	for (val = 1; val <= kValues; val++) {
 		if (valid(row, col, val)) {
 			grid[row][col] = val;
 			
@@ -77,6 +80,7 @@ int solve (int row, int col) {
 }
 
 int main (int argc, const char * argv[]) {
+	int row, col;
 	if (argc != 2) {
 		printf("Usage: sudoku /path/to/puzzle.txt\n");
 		
@@ -101,8 +105,8 @@ int main (int argc, const char * argv[]) {
 	if (solve(0, 0)) {
 		printf("Solution:\n\n");
 		
-		for (int row = 0; row < kRows; row++) {
-			for (int col = 0; col < kCols; col++) {
+		for (row = 0; row < kRows; row++) {
+			for (col = 0; col < kCols; col++) {
 				printf("%d ", grid[row][col]);
 			}
 			
